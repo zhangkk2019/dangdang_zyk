@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+	<include file="com/baizhi/struts/interceptor-struts.xml"></include>
+	<include file="com/baizhi/struts/user-struts.xml"></include>
+	<package name="address" extends="interceptor" namespace="/address">
+	
+		<!-- 添加购物车 -->
+		<action name="selectAddress" class="com.baizhi.action.AddressAction" method="selectAddress">
+			<interceptor-ref name="MyStack"></interceptor-ref>
+			<result name="loginError">/front/user/login_form.jsp</result>
+			
+			<result name="activeError" type="redirectAction">
+				<param name="namespace">/user</param>
+				<param name="actionName">getAcCode</param>
+			</result>
+			
+			<result name="selectAddress">/front/order/address_form.jsp</result>
+		</action>
+		
+		<!-- 添加订单项 -->
+		<action name="addOrder" class="com.baizhi.action.AddressAction" method="addOrder">
+			<result name="addOrder">/front/order/order_ok.jsp</result>
+		</action>
+	</package>
+</struts>

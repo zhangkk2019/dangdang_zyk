@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace属性值：只等当前的mapper文件管理的DAO接口全限定名  一个mapper文件只对应一个DAO接口实现 -->
+<mapper namespace="com.baizhi.dao.AddressDao">
+	<!-- 
+		create table dd_address  (
+   id                   varchar2(20)                    not null,
+   name                 varchar2(36),
+   local                varchar2(100),
+   phone                varchar2(11),
+   zip_code             varchar2(10),
+   user_id              varchar2(20),
+   constraint PK_DD_ADDRESS primary key (id)
+);
+	 -->
+	 
+	 
+	<!-- 查询所有地址 -->
+	<select id="selectAllAddress" resultType="address" parameterType="String">
+		select id,name,local,zip_code,user_id from dd_address where user_id=#{id}
+	</select>
+	
+	<!-- 查询一个地址 -->
+	<select id="selectOneAddress" resultType="Address">
+		select id,name,local,phone,zip_code,user_id from dd_address where id=#{addressid}
+	</select>
+	
+	<!-- 添加一个地址 -->
+	<insert id="addAddress" >
+		insert into dd_address values(#{id},#{name},#{local},#{phone},#{zip_code},#{user_id})
+	</insert>
+	
+	<!-- 更新一个地址 -->
+	<update id="updateOneAddress" >
+		update dd_address set name=#{name},local=#{local},phone=#{phone},zip_code=#{zip_code},user_id=#{user_id} where id=#{id}
+	</update>
+</mapper>

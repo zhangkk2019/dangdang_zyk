@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+	<package name="interceptor" extends="struts-default" namespace="/interceptor">
+		
+		<interceptors>
+			<interceptor name="MyInter" class="com.baizhi.interceptor.test"></interceptor>
+			<interceptor-stack name="MyStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="MyInter"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+	</package>
+</struts>

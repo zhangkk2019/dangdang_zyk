@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace属性值：只等当前的mapper文件管理的DAO接口全限定名  一个mapper文件只对应一个DAO接口实现 -->
+<mapper namespace="com.baizhi.dao.AdminDao">
+	<!-- 实现一个查询
+		id属性：指定接口中方法的名字。
+		resultType属性：指定接口方法返回值类型的全限定名。
+		在select标签里写sql语句。
+	 -->
+	 <!-- 登录 -->
+	<select id="login" parameterType="java.lang.String" resultType="Admin">
+		select id,username,password from dd_admin where username=#{username}
+	</select>
+	
+	
+	<!-- 类别分级显示 --><!-- 将分类表自连接 -->
+	 
+	<resultMap type="Category" id="sCategory"><!-- 这里的type是sql语句的返回值类型 -->
+		<id column="fid" property="id"/>
+		<result column="fname" property="name"/>
+		<result column="flevels" property="levels"/>
+		
+		<association property="category" javaType="Category"><!-- 关联属性是对象用javaType,是集合则用ofType -->
+			<id column="sid" property="id"/>
+			<result column="sname" property="name"/>
+		</association>
+	</resultMap>
+	<select id="selectAllCategory" resultMap="sCategory">
+		select f.id fid,f.name fname,f.levels flevels,s.id sid,s.name sname 
+		from dd_category f left join dd_category s
+		on f.category_id=s.id
+		
+	</select>
+	<!-- 类别全部显示 查询一级类别 -->
+	<select id="selectCategory" resultType="Category">
+		select id,name,category_id parentId,levels from dd_category where levels='1'
+	</select>
+	
+	<!-- 添加一级类别 -->
+	<insert id="addFirst"><!--  parameterType="Category" -->
+		<!-- 按顺序对应插入值 ， 但容易把顺序写错 
+		insert into dd_category values(#{id},#{name},#{parentId},#{levels})
+		-->
+		<!-- 为避免因顺序写错而添加错，采用以下两种方法解决 -->
+		<!-- 方法一-->
+		<!--insert into dd_category values(#{id},#{name},#{parentId jdbcType=NULL},#{levels})  声明parentId可以接收空字段-->
+		 
+		 <!-- 方法二 -->
+		insert into dd_category(id,name,levels) values(#{id},#{name},#{levels})  <!--声明为哪些字段赋值 --> 
+	</insert>
+	
+	<!-- 添加二级类别 -->
+	<insert id="addSecond">
+		insert into dd_category(id,name,category_id,levels) values(#{id},#{name},#{parentId},#{levels})
+	</insert>
+	
+	<!-- 查一个父类 -->
+	<select id="selectOneCategory" resultType="Category">
+		select id,name,category_id parentId,levels from dd_category where id=#{id}
+	</select>
+	
+	<!-- 通过id查询子类 -->
+	<select id="selectSons" resultType="Category">
+		select id,name,category_id,levels from dd_category where category_id=#{id}
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="deleteCategory">
+		delete from dd_category where id=#{id}
+	</delete>
+	
+	<!-- 查询所有book -->
+	<select id="selectAllBook" resultType="Book">
+		select id,name,author,price,dprice,press,press_date,cover,sale,stock from dd_book
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="deleteBook">
+		delete from dd_book where id=#{id}
+	</delete>
+	
+	<!-- 模糊查询 -->
+	<select id="selectByKey" resultType="Book">
+		select id,name,author,price,dprice,press,press_date,cover,sale,stock from dd_book
+		<where>
+			<if test="key=='name'">name like '%${content}%'</if>
+			<if test="key=='press'">press like '%${content}%'</if>
+			<if test="key=='author'">author like '%${content}%'</if>
+		</where>
+	</select>
+	
+	<!-- 修改   先查再改 -->
+	<!-- 查询一本书 -->
+	<select id="selectOneBook" resultType="Book">
+		select id,name,author,cover,press,press_date,edition,print_date,impression,isbn,
+		word_num,page_num,"size",paper,pack,price,dprice,create_date,editor_recommend,
+		content_abstract,author_abstract,director,media_commentary,category_id,sale,stock from dd_book where id=#{id}
+	</select>
+	<!-- 查询二级类别 -->
+	<select id="selectAllSecond" resultType="Category">
+		select id,name,category_id parentId,levels from dd_category where levels='2'
+	</select>
+	<!-- 更新 -->
+	<update id="updateOneBook">
+		update dd_book set name=#{name},author=#{author},press=#{press},press_date=#{press_date},edition=#{edition},print_date=#{print_date},
+		impression=#{impression},isbn=#{isbn},word_num=#{word_num},page_num=#{page_num},"size"=#{size},paper=#{paper},pack=#{pack},price=#{price},
+		dprice=#{dprice},create_date=#{create_date},editor_recommend=#{editor_recommend},content_abstract=#{content_abstract},author_abstract=#{author_abstract},
+		director=#{director},media_commentary=#{media_commentary},category_id=#{category_id},sale=#{sale},stock=#{stock}
+		<if test="cover!=null">,cover=#{cover}</if>
+		where id=#{id}
+	</update>
+	
+	<!-- 添加书籍 -->
+	<insert id="addBook">
+		insert into dd_book values(dd_book_seq.nextval,#{name},#{author},#{cover},#{press},#{press_date},
+		#{edition},#{print_date},#{impression},#{isbn},#{word_num},#{page_num},#{size},#{paper},#{pack},#{price},
+		#{dprice},#{create_date},#{editor_recommend},#{content_abstract},#{author_abstract},#{director},
+		#{media_commentary},#{category_id},#{sale},#{stock})
+	</insert>
+</mapper>

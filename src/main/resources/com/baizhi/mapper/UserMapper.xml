@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace属性值：只等当前的mapper文件管理的DAO接口全限定名  一个mapper文件只对应一个DAO接口实现 -->
+<mapper namespace="com.baizhi.dao.UserDao">
+	<!-- 实现一个查询
+		id属性：指定接口中方法的名字。
+		resultType属性：指定接口方法返回值类型的全限定名。
+		在select标签里写sql语句。
+	 -->
+	 <!-- 登录 -->
+	<select id="login" parameterType="java.lang.String" resultType="User">
+		select id,email,password,nickname,code,status,salt,create_date from dd_user where email=#{email}
+	</select>
+	
+	<!-- 查询所有用户 -->
+	<select id="selectAllUser" resultType="User">
+		select id,email,password,nickname,code,status,salt,create_date from dd_user
+	</select>
+	
+	<!-- 通过email查一个用户 -->
+	<select id="selectOneUser" parameterType="java.lang.String" resultType="User">
+		select id,email,password,nickname,code,status,salt,create_date from dd_user where email=#{email}
+	</select>
+	
+	<!-- 通过id查一个用户 -->
+	<select id="selectOneUserById" parameterType="java.lang.String" resultType="User">
+		select id,email,password,nickname,code,status,salt,create_date from dd_user where id=#{id}
+	</select>
+	
+	<!-- 注册用户 -->
+	<insert id="regist">
+	<!--
+		insert into dd_user(id,email,password,nickname,status,salt,create_date) 
+		values(#{id},#{email},#{password},#{nickname},#{status},#{salt},#{create_date})
+		-->
+		insert into dd_user (id,email,password,nickname,code,status,salt,create_date) 
+		values(#{id},#{email},#{password},#{nickname},#{code,jdbcType=NULL},#{status},#{salt},#{create_date})
+	</insert>
+	
+	<!-- 更新用户     在激活码那里 -->
+	<update id="activeUser" parameterType="User">
+		update dd_user set code=#{code} where id=#{id}
+	</update>
+	
+	<!-- 更新用户     后台修改那里 -->
+	<update id="activeUser2" parameterType="User">
+		update dd_user set status=#{status} where id=#{id}
+	</update>
+	<!-- 查询一级类别 -->
+	<resultMap type="Category" id="first">
+		<id column="fid" property="id"/>
+		<result column="fname" property="name"/>
+		<collection property="cateList" ofType="Category">
+			<id column="sid" property="id"/>
+		<result column="sname" property="name"/>
+		</collection>
+	</resultMap>
+	<select id="selectAllFirst" resultMap="first">
+		select f.id fid,f.name fname,s.id sid,s.name sname from dd_category f left join dd_category s on f.id=s.category_id
+		where f.levels='1'
+	</select>
+	
+	<!-- 热销图书  根据销量降序排序-->
+	<select id="selectBySale" resultType="Book">
+		select b.*,rownum from 
+   		 (select id,name,author,cover,press,press_date,edition,print_date,impression,isbn,
+    		word_num,page_num,"size",paper,pack,price,dprice,create_date,editor_recommend,
+			content_abstract,author_abstract,director,media_commentary,category_id,sale,stock from dd_book
+    		order by sale desc
+    	) b
+		where rownum between 0 and 8 and sale!=0
+	</select>
+	
+	<!-- 最新上架图书  根据日期排序 -->
+	<select id="selectByCreateDate" resultType="Book">
+		select b.*,rownum from 
+   		 (select id,name,author,cover,press,press_date,edition,print_date,impression,isbn,
+    		word_num,page_num,"size",paper,pack,price,dprice,create_date,editor_recommend,
+			content_abstract,author_abstract,director,media_commentary,category_id,sale,stock from dd_book
+    		order by create_date desc
+    	) b
+		where rownum between 0 and 8 and sale!=0
+	</select>
+	
+	<!-- 新书热卖  根据上架时间和销量降序排序 -->
+	<select id="selectByCreateDateAndSale" resultType="Book">
+		select b.*,rownum from 
+   		 (select id,name,author,cover,press,press_date,edition,print_date,impression,isbn,
+    		word_num,page_num,"size",paper,pack,price,dprice,create_date,editor_recommend,
+			content_abstract,author_abstract,director,media_commentary,category_id,sale,stock from dd_book
+    		order by create_date asc,sale desc
+    	) b
+		where rownum between 0 and 8
+	</select>
+	
+	<!-- 查询一个一级类别 -->
+	<resultMap type="Category" id="onefirst">
+		<id column="fid" property="id"/>
+		<result column="fname" property="name"/>
+		<collection property="cateList" ofType="Category">
+			<id column="sid" property="id"/>
+		<result column="sname" property="name"/>
+		</collection>
+	</resultMap>
+	<select id="selectOneFirst" resultMap="onefirst">
+		select f.id fid,f.name fname,s.id sid,s.name sname from dd_category f left join dd_category s on f.id=s.category_id
+		where f.id=#{fid}
+	</select>
+	
+	<!-- 跳转二级页面    分页查询-->
+	<select id="selectSecondPage" resultType="Book">
+		select * from(select b.*,rownum as rn from(select id,name,author,cover,press,press_date,edition,print_date,impression,isbn,
+    	word_num,page_num,"size",paper,pack,price,dprice,create_date,editor_recommend,
+		content_abstract,author_abstract,director,media_commentary,category_id,sale,stock from dd_book
+		<where>
+			<choose>
+				<when test="sid==null||sid==''">
+					category_id in(select id from dd_category where category_id=#{fid})
+				</when>
+				<otherwise>
+					category_id=#{sid}<!-- 书所属类别的id   查出此二级类别下的所有图书 -->
+				</otherwise>
+			</choose>
+		</where>)b)where rn between #{begin} and #{end}
+	</select>
+	
+	<!-- 分页查询里的总数量 -->
+	<select id="selectCount" resultType="Integer">
+		select count(id) from dd_book
+		<where>
+			<choose>
+				<when test="sid==null||sid==''">
+					category_id in(select id from dd_category where category_id=#{fid})
+				</when>
+				<otherwise>
+					category_id=#{sid}<!-- 书所属类别的id   查出此二级类别下的所有图书 -->
+				</otherwise>
+			</choose>
+		</where>
+	</select>
+	
+	<!-- 更新一本书 -->
+	<update id="updateBook">
+		update dd_book set sale=#{sale},stock=#{stock} where id=#{id}
+	</update>
+	
+	<!-- 通过id查询一本书 -->
+	<select id="selectOneBook" resultType="Book">
+		select id,name,author,cover,press,press_date,edition,print_date,impression,isbn,
+    	word_num,page_num,"size",paper,pack,price,dprice,create_date,editor_recommend,
+		content_abstract,author_abstract,director,media_commentary,category_id,sale,stock from dd_book where id=#{bookid}
+	</select>
+</mapper>

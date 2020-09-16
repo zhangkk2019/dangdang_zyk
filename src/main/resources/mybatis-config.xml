@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	
+	<properties resource="db.properties"></properties>
+	<!-- 给实体类起别名 -->
+	<typeAliases>
+		<typeAlias type="com.baizhi.entity.Admin" alias="Admin"/>
+		<typeAlias type="com.baizhi.entity.Category" alias="Category"/>
+		<typeAlias type="com.baizhi.entity.Book" alias="Book"/>
+		<typeAlias type="com.baizhi.entity.User" alias="User"/>
+		<typeAlias type="com.baizhi.entity.CartItem" alias="CartItem"/>
+		<typeAlias type="com.baizhi.entity.Address" alias="Address"/>
+		<typeAlias type="com.baizhi.entity.Order" alias="Order"/>
+		<typeAlias type="com.baizhi.entity.Item" alias="Item"/>
+	</typeAliases>
+
+	<!-- 编写mybatis的数据库运行环境 
+		default属性的值，用于指定使用的数据库运行环境的id属性值
+	-->
+	<environments default="oracle">
+		<!-- 
+			id属性值代表当前数据库运行环境的唯一标识
+		-->
+		<environment id="oracle">
+			<!-- 给mybatis指定一下事务的管理方式 -->
+			<transactionManager type="JDBC"></transactionManager>
+			<!-- 配置连接数据库的相关参数 : 这里其实是指给mybatis自己的连接池提供连接数据库的相关参数
+				type 属性值用于指定使用什么连接池， POOLED代表使用mybatis自己默认提供的连接池
+			-->
+			<dataSource type="POOLED">
+				<property name="driver" value="oracle.jdbc.OracleDriver"></property>
+				<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"></property>
+				<property name="username" value="hr"></property>
+				<property name="password" value="hr"></property>
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!-- 注册mapper文件的路径 -->
+	<mappers>
+		<!-- 一个mapper标签指定一个mapper文件的位置 -->
+		<mapper resource="com/baizhi/mapper/AdminMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/UserMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/CartMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/AddressMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/OrderMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/ItemMapper.xml"/>
+	</mappers>
+</configuration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

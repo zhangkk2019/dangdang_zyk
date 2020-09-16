@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace属性值：只等当前的mapper文件管理的DAO接口全限定名  一个mapper文件只对应一个DAO接口实现 -->
+<mapper namespace="com.baizhi.dao.ItemDao">
+<!-- 
+create table dd_item  (
+   id                   varchar2(36)                    not null,
+   book_id              number(10),
+   order_id             varchar2(20),
+   count                number(10),
+   create_date          date,
+   name                 varchar2(20),
+   price                number(10,2),
+   dprice               number(10,2),
+   constraint PK_DD_ITEM primary key (id)
+);
+ -->
+	<!-- 添加一个订单 -->
+	<insert id="addItem" >
+		insert into dd_item values(#{id},#{book_id},#{order_id},#{count},#{create_date},#{name},#{price},#{dprice})
+	</insert>
+	
+	<select id="selectOneItem"  resultType="Item">
+		select id,book_id,order_id,count,create_date,name,price,dprice from dd_item where order_id=#{oid}
+	</select>
+</mapper>

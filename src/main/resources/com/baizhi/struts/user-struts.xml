@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+	<include file="com/baizhi/struts/admin-struts.xml"></include>
+	<package name="user" extends="struts-default" namespace="/user">
+		<!-- 登录 -->
+		<action name="login" class="com.baizhi.action.UserAction"
+			method="login">
+			<result name="success" type="redirectAction">main</result>
+			<result name="error">/front/user/login_form.jsp</result>
+		</action>
+
+		<!-- 退出 -->
+		<action name="loginOut" class="com.baizhi.action.UserAction"
+			method="loginOut">
+			<result name="loginOut" type="redirectAction">main</result>
+			<!-- <result name="loginOut">/front/user/login_form.jsp</result> -->
+		</action>
+
+		<!-- 首页 -->
+		<action name="main" class="com.baizhi.action.UserAction"
+			method="main">
+			<result name="main">/front/main/main.jsp</result>
+		</action>
+
+		<!-- 跳转二级页面 -->
+		<action name="selectSecondPage" class="com.baizhi.action.UserAction"
+			method="selectSecondPage">
+			<result name="selectSecondPage">/front/main/book_list.jsp</result>
+		</action>
+
+		<!-- 查询一本书 -->
+		<action name="selectOneBook" class="com.baizhi.action.UserAction"
+			method="selectOneBook">
+			<result name="selectOneBook">/front/main/book_detail.jsp</result>
+		</action>
+
+		<!-- 注册 -->
+		<action name="regist" class="com.baizhi.action.UserAction"
+			method="regist">
+			<result name="regist" type="redirectAction">getAcCode</result>
+			<result name="error">/front/user/register_form.jsp</result>
+		</action>
+
+		<!-- 到完成 -->
+		<action name="getAcCode" class="com.baizhi.action.UserAction"
+			method="getAcCode">
+			<result name="getAcCode" type="dispatcher">/front/user/verify_form.jsp
+			</result>
+		</action>
+
+		<!-- 到最后  更新激活码-->
+		<action name="activeUser" class="com.baizhi.action.UserAction"
+			method="activeUser">
+			<result name="activeUser">/front/user/register_ok.jsp</result>
+		</action>
+		
+		<!-- 更新状态-->
+		<!--  
+		<action name="activeUser2" class="com.baizhi.action.UserAction" method="activeUser2">
+			<result name="activeUser2" type="redirectAction">
+				<param name="namespace">/admin</param>
+				<param name="selectAllUser">selectAllUser</param>
+			</result>
+		</action>
+		-->
+	</package>
+</struts>

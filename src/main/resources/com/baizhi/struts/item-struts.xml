@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+	<package name="item" extends="struts-default" namespace="/item">
+		<!--  -->
+		<action name="selectOneItem" class="com.baizhi.action.ItemAction" method="selectOneItem">
+			<result name="selectOneItem">/back/order/detail.jsp</result>
+		</action>
+		
+	</package>
+</struts>

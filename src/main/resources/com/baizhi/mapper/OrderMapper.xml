@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace属性值：只等当前的mapper文件管理的DAO接口全限定名  一个mapper文件只对应一个DAO接口实现 -->
+<mapper namespace="com.baizhi.dao.OrderDao">
+<!-- 
+	create table dd_order  (
+   id                   varchar2(20)                    not null,
+   order_no             varchar2(50)                    not null,
+   total                number(10,2),
+   status               varchar2(20),
+   create_date          date,
+   address_id           varchar2(50),
+   user_id              varchar2(36),
+   name                 varchar2(20),
+   local                varchar2(100),
+   constraint PK_DD_ORDER primary key (id)
+);
+ -->
+	<!-- 添加一个订单 -->
+	<insert id="addOrder" >
+		insert into dd_order values(#{id},#{order_no},#{total},#{status},#{create_date},#{address_id},#{user_id},#{name},#{local})
+	</insert>
+	
+	<!-- 查所有订单 -->
+	<select id="selectAllOrder" resultType="Order" >
+		select id,order_no,total,status,create_date,address_id,user_id,name,local from dd_order
+	</select>
+	
+	<!-- 通过id查一个订单 -->
+	<select id="selectOneOrder" resultType="Order" >
+		select id,order_no,total,status,create_date,address_id,user_id,name,local from dd_order where id=#{oid}
+	</select>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+<include file="com/baizhi/struts/interceptor2-struts.xml"></include>
+	<package name="admin" extends="interceptor2" namespace="/admin">
+		<!-- 登录 -->
+		<action name="login" class="com.baizhi.action.AdminAction" method="login">
+			<result name="success">/back/main/main.jsp</result>
+			<result name="error">/back/login.jsp</result>
+		</action>
+		
+		<!-- 退出 -->
+		<action name="logout" class="com.baizhi.action.AdminAction" method="logout">
+			<result name="logout">/back/main/main.jsp</result>
+		</action>
+		
+		<!-- 查询所有user用户 -->
+		<action name="selectAllUser" class="com.baizhi.action.AdminAction" method="selectAllUser">
+			<interceptor-ref name="MyStack2"></interceptor-ref>
+			<result name="loginError">/test.jsp</result>
+			<result name="selectAllUser">/back/user/show.jsp</result>
+		</action>
+		
+		<!-- 验证码 -->
+		<action name="captcha" class="com.baizhi.action.CaptchaAction">
+			<result type="stream"></result>
+		</action>
+		
+		<!-- 展示所有类别 -->
+		<action name="selectAllCategory" class="com.baizhi.action.AdminAction" method="selectAllCategory">
+			<interceptor-ref name="MyStack2"></interceptor-ref>
+			<result name="loginError">/test.jsp</result>
+			<result name="selectAllCategory">/back/category/show.jsp</result>
+		</action>
+		
+		<!-- 添加一级类别 -->
+		<action name="addFirst" class="com.baizhi.action.AdminAction" method="addFirst">
+			<result name="addFirst" type="redirectAction">selectAllCategory</result>
+		</action>
+		
+		<!-- 跳转到二级类别添加时的查询 -->
+		<action name="selectCategory" class="com.baizhi.action.AdminAction" method="selectCategory">
+			<result name="selectCategory">/back/category/add-second.jsp</result>
+		</action>
+		
+		<!-- 刪除类 -->
+		<action name="deleteCategory" class="com.baizhi.action.AdminAction" method="deleteCategory">
+			<result name="deleteCategory" type="redirectAction">selectAllCategory</result>
+		</action>
+		
+		<!-- 添加二级类别 -->
+		<action name="addSecond" class="com.baizhi.action.AdminAction" method="addSecond">
+			<result name="addSecond" type="redirectAction">selectAllCategory</result>
+		</action>
+		
+		
+		<!-- 展示所有书籍 -->
+		<action name="selectAllBook" class="com.baizhi.action.AdminAction" method="selectAllBook">
+			<interceptor-ref name="MyStack2"></interceptor-ref>
+			<result name="loginError">/test.jsp</result>
+			<result name="selectAllBook">/back/book/show.jsp</result>
+		</action>
+		
+		<!-- 刪除书籍 -->
+		<action name="deleteBook" class="com.baizhi.action.AdminAction" method="deleteBook">
+			<result name="deleteBook" type="redirectAction">selectAllBook</result>
+		</action>
+		
+		<!-- 模糊查询 -->
+		<action name="selectByKey" class="com.baizhi.action.AdminAction" method="selectByKey">
+			<result name="selectByKey">/back/book/show.jsp</result>
+		</action>
+		
+		<!-- 查询一本书  跳转到更新页面-->
+		<action name="selectOneBook" class="com.baizhi.action.AdminAction" method="selectOneBook">
+			<result name="selectOneBook">/back/book/update.jsp</result>
+		</action>
+		
+		<!-- 更新提交-->
+		<action name="updateOneBook" class="com.baizhi.action.AdminAction" method="updateOneBook">
+			<result name="updateOneBook" type="redirectAction">selectAllBook</result>
+		</action>
+		
+		<!-- 查询二级类别     添加书籍 -->
+		<action name="selectAllSecond" class="com.baizhi.action.AdminAction" method="selectAllSecond">
+			<result name="selectAllSecond">/back/book/add.jsp</result>
+		</action>
+		<!-- 添加图书 -->
+		<action name="addBook" class="com.baizhi.action.AdminAction" method="addBook">
+			<result name="addBook" type="redirectAction">selectAllBook</result>
+		</action>
+		
+		
+		
+	</package>
+</struts>

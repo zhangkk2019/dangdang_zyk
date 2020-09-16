@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+	<include file="com/baizhi/struts/interceptor2-struts.xml"></include>
+	<package name="order" extends="interceptor2" namespace="/order">
+		<!-- 查询所有订单 -->
+		<action name="selectAllOrder" class="com.baizhi.action.OrderAction" method="selectAllOrder">
+			<interceptor-ref name="MyStack2"></interceptor-ref>
+			<result name="loginError">/test.jsp</result>
+			<result name="selectAllOrder">/back/order/show.jsp</result>
+		</action>
+		
+		<!-- 查询一个订单 -->
+		<action name="selectOneOrder" class="com.baizhi.action.OrderAction" method="selectOneOrder">
+			<result name="selectOneOrder">/back/order/detail.jsp</result>
+		</action>
+	</package>
+</struts>
